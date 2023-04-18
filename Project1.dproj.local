@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2023/04/04 10:39:23.000.493,=\\Mac\Home\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2023/04/08 13:18:28.000.973,=\\Mac\Home\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2023/04/08 13:19:42.000.330,\\Mac\Home\Documents\Embarcadero\Studio\Projects\Unit1.pas=\\Mac\Home\Documents\Practice\practice.pas</Transaction>
+    <Transaction>2023/04/08 13:19:42.000.330,\\Mac\Home\Documents\Embarcadero\Studio\Projects\Unit1.dfm=\\Mac\Home\Documents\Practice\practice.dfm</Transaction>
+    <Transaction>2023/04/08 13:22:26.000.060,\\Mac\Home\Documents\Embarcadero\Studio\Projects\Project1.dproj=\\Mac\Home\Documents\labs\Project1.dproj</Transaction>
+    <Transaction>2023/04/11 08:39:56.000.942,=\\Mac\Home\Documents\labs\Unit1.pas</Transaction>
+    <Transaction>2023/04/11 08:41:04.000.292,\\Mac\Home\Documents\labs\Lists.pas=\\Mac\Home\Documents\labs\Unit1.pas</Transaction>
+    <Transaction>2023/04/11 09:21:29.000.918,=\\Mac\Home\Documents\labs\Unit2.pas</Transaction>
+    <Transaction>2023/04/11 11:42:32.000.991,=\\Mac\Home\Documents\labs\Unit1.pas</Transaction>
+    <Transaction>2023/04/11 23:29:29.000.287,=\\Mac\Home\Documents\labs\AddForm.pas</Transaction>
+    <Transaction>2023/04/11 23:30:50.000.542,=\\Mac\Home\Documents\labs\Lists.pas</Transaction>
+    <Transaction>2023/04/11 23:31:00.000.194,=\\Mac\Home\Documents\labs\Unit3.pas</Transaction>
+  </Transactions>
+</BorlandProject>

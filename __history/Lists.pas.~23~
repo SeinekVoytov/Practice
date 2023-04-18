@@ -1,0 +1,330 @@
+unit Lists;
+
+interface
+
+Type
+  TEngine = (Default, Gasoline, Diesel, Electric);
+
+Type
+  PBrand = ^TBrand;
+
+  TBrand = record
+    Next: PBrand;
+    Code: Word;
+    Name: String;
+    Country: String;
+  end;
+
+  PCar = ^TCar;
+
+  TCar = record
+    Next: PCar;
+    Code: Word;
+    Model: String;
+    Engine: TEngine;
+    CostInThDol: Integer;
+    FuelConsumption: Real;
+    ReliabilityYears: Byte;
+    Comfort: Byte;
+  end;
+
+Type
+  TComparator = function(Element1: PCar; Element2: PCar): Boolean;
+
+Type
+  TBrandList = class
+    private NumberOfBrands: Word;
+    public Head: PBrand;
+    private Size: Integer;
+    public Function Contains(Const Brand: String): Boolean;
+    public Procedure Add(Const BrandName: String);
+    public Function GetCode(Brand: String ): Word;
+    public Function GetBrand(Const Code: Word): String;
+    public constructor Create();
+  end;
+
+TCarList = class
+    Head: PCar;
+    private Size: Integer;
+    public Procedure Add(var BrandsList: TBrandList;
+                          Brand: String;
+                          Model: String;
+                          Engine: TEngine;
+                          CostInThDol: Integer;
+                          FuelConsumption: Real;
+                          ReliabilityYears: Byte;
+                          Comfort: Byte);
+    public Function Get(Const Index: Word): PCar;
+    public Function GetSize(): Integer;
+    public Procedure Sort(Comparator: TComparator; Brand: String; BrandsList: TBrandList);
+    public Procedure Remove(Const Index: Word);
+    public Procedure Search(List: TCarList;
+                            BrandsList: TBrandList;
+                            Engine: TEngine;
+                            CostFrom, CostTo: Integer;
+                            ConsumptionFrom, ConsumptionTo: Real;
+                            ReliabilityFrom, ReliabilityTo: Byte;
+                            ComfortFrom, ComfortTo: Byte
+                            );
+    public constructor Create();
+  end;
+
+implementation
+  Function TBrandList.Contains(Const Brand: String): Boolean;
+    Var
+      Temp: PBrand;
+    Begin
+      Temp := Head;
+      Result := False;
+      while (Temp <> nil) and (not Result) do
+        Begin
+          if (Temp^.Name = Brand) then
+            Begin
+              Result := True;
+            End
+          else
+            Temp := Temp^.Next;
+        End;
+    End;
+
+  Procedure TBrandList.Add(Const BrandName: String);
+    Var
+      Temp, NewElement: PBrand;
+    Begin
+      Inc(Size);
+      Temp := Head;
+      New(NewElement);
+      Inc(NumberOfBrands);
+      NewElement^.Next := Temp;
+      NewElement^.Code := NumberOfBrands;
+      NewElement^.Name := BrandName;
+      Head := NewElement;
+      NewElement^.Next := Temp;
+    End;
+
+  Function TBrandList.GetCode(Brand: String): Word;
+    Var
+      Temp: PBrand;
+    Begin
+      Temp := Head;
+      Result := 0;
+      while (Temp <> nil) and (Result = 0) do
+        Begin
+          if (Temp^.Name = Brand) then
+            Begin
+              Result := Temp^.Code;
+            End
+          else
+            Temp := Temp^.Next;
+        End;
+    End;
+
+  Function TBrandList.GetBrand(Const Code: Word): String;
+    Var
+      Temp: PBrand;
+    Begin
+      Temp := Head;
+      while (Temp^.Code <> Code) do
+        Begin
+          Temp := Temp.Next;
+        End;
+      Result := Temp.Name;
+    End;
+
+  constructor TBrandList.Create();
+    Begin
+      NumberOfBrands := 0;
+      Head := nil;
+      Size := 0;
+    End;
+
+    Procedure TCarList.Add(var BrandsList: TBrandList;
+                          Brand: String;
+                          Model: String;
+                          Engine: TEngine;
+                          CostInThDol: Integer;
+                          FuelConsumption: Real;
+                          ReliabilityYears: Byte;
+                          Comfort: Byte);
+    Var
+      NewElement, TempHead, Temp: PCar;
+      Code: Word;
+    Begin
+      Inc(Size);
+      New(NewElement);
+      NewElement^.Code := BrandsList.GetCode(Brand);
+      NewElement^.Model := Model;
+      NewElement^.Engine := Engine;
+      NewElement^.CostInThDol := CostInThDol;
+      NewElement^.FuelConsumption := FuelConsumption;
+      NewElement^.ReliabilityYears := ReliabilityYears;
+      NewElement^.Comfort := Comfort;
+
+      TempHead := Head;
+
+      if (not BrandsList.Contains(Brand)) then
+        Begin
+          BrandsList.Add(Brand);
+        End;
+
+      Code := BrandsList.GetCode(Brand);
+      NewElement^.Code := Code;
+
+      if (Head = nil) then
+        Begin
+          NewElement.Next := nil;
+          Head := NewElement;
+        End
+      else
+        Begin
+          while (TempHead^.Code < Code) and (TempHead^.Next <> nil) do
+            Begin
+              TempHead := TempHead^.Next;
+            End;
+
+          Temp := TempHead^.Next;
+          TempHead.Next := NewElement;
+          NewElement.Next := Temp;
+        End;
+    End;
+
+  Function TCarList.Get(Const Index: Word): PCar;
+    Var
+      I: Word;
+    Begin
+      Result := Head;
+      I := 0;
+      while (I < Index) do
+        Begin
+          Result := Result.Next;
+          Inc(I);
+        End;
+    End;
+
+  Function TCarList.GetSize(): Integer;
+    Begin
+      Result := Size;
+    End;
+
+  Procedure TCarList.Sort(Comparator: TComparator; Brand: String; BrandsList: TBrandList);
+    Var
+      Prev, Current, TempHead, Temp, Saver: PCar;
+      TempList: TCarList;
+    Begin
+        TempList := TCarList.Create;
+        TempHead := Head;
+        while (TempHead <> nil) do
+          Begin
+            if (BrandsList.GetBrand(TempHead^.Code) = Brand) then
+              Begin
+                TempList.Add(BrandsList,
+                             Brand,
+                             TempHead^.Model,
+                             TempHead^.Engine,
+                             TempHead^.CostInThDol,
+                             TempHead^.FuelConsumption,
+                             TempHead^.ReliabilityYears,
+                             TempHead^.Comfort);
+              End;
+            TempHead := TempHead^.Next;
+          End;
+
+        Temp := TempList.Head;
+        New(TempList.Head);
+        TempList.Head.Next := Temp;
+
+
+        Prev := TempList.Head^.Next;
+        Current := TempList.Head^.Next^.Next;
+
+        while (Current <> nil) do
+          Begin
+
+            if (not Comparator(Prev, Current)) then
+              Begin
+                Prev := Current;
+                Current := Current^.Next;
+              End
+            else
+              Begin
+                Temp := TempList.Head;
+                while (Comparator(Current, Temp^.Next)) do
+                  Begin
+                    Temp := Temp^.Next;
+                  End;
+                Prev.Next := Current^.Next;
+                Current.Next := Temp^.Next;
+                Temp.Next := Current;
+                Current := Prev^.Next;
+              End;
+          End;
+
+        Temp := TempList.Head;
+        TempList.Head := TempList.Head^.Next;
+        Dispose(Temp);
+
+
+    End;
+
+  Procedure TCarList.Remove(Const Index: Word);
+    Var
+      TempHead, Temp: PCar;
+    Begin
+      if (Index = 0) then
+        Begin
+          TempHead := Head;
+          Head := Head^.Next;
+          Dispose(TempHead);
+        End
+      else
+        Begin
+          TempHead := Get(Index - 1);
+          Temp := TempHead^.Next;
+          TempHead.Next := TempHead^.Next^.Next;
+          Dispose(Temp);
+        End;
+      Dec(Size);
+    End;
+
+  Procedure TCarList.Search(List: TCarList;
+                            BrandsList: TBrandList;
+                            Engine: TEngine;
+                            CostFrom, CostTo: Integer;
+                            ConsumptionFrom, ConsumptionTo: Real;
+                            ReliabilityFrom, ReliabilityTo: Byte;
+                            ComfortFrom, ComfortTo: Byte
+                            );
+    Var
+      TempHead: PCar;
+    Begin
+      TempHead := Head;
+      while (TempHead <> nil) do
+        Begin
+          if (TempHead^.Engine = Engine) and
+             (TempHead^.CostInThDol >= CostFrom) and (TempHead^.CostInThDol <= CostTo) and
+             (TempHead^.FuelConsumption >= ConsumptionFrom) and (TempHead^.FuelConsumption <= ConsumptionTo) and
+             (TempHead^.ReliabilityYears >= ReliabilityFrom) and (TempHead^.ReliabilityYears <= ReliabilityTo) and
+             (TempHead^.Comfort >= ComfortFrom) and (TempHead^.Comfort <= ComfortTo)then
+            Begin
+              List.Add(BrandsList,
+                       BrandsList.GetBrand(TempHead^.Code),
+                       TempHead^.Model,
+                       TempHead^.Engine,
+                       TempHead^.CostInThDol,
+                       TempHead^.FuelConsumption,
+                       TempHead^.ReliabilityYears,
+                       TempHead^.Comfort
+                       );
+            End;
+          TempHead := TempHead^.Next;
+        End;
+
+    End;
+
+  constructor TCarList.Create();
+    Begin
+      Head := nil;
+      Size := 0;
+    End;
+
+end.
