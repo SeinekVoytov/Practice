@@ -1,0 +1,127 @@
+﻿unit Unit2;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls;
+
+Type
+  TEngine = (Default, Gasoline, Diesel, Electric);
+
+type
+  TForm2 = class(TForm)
+    CostEdit: TEdit;
+    ConsumptionEdit: TEdit;
+    ReliabilityEdit: TEdit;
+    ComfortEdit: TEdit;
+    EngineLabel: TLabel;
+    CostLabel: TLabel;
+    ConsumptionLabel: TLabel;
+    ReliabilityLabel: TLabel;
+    ComfortLabel: TLabel;
+    ReadyButton: TButton;
+    EngineComboBox: TComboBox;
+    procedure FormCreate(Sender: TObject);
+    procedure CostEditChange(Sender: TObject);
+    procedure ConsumptionEditChange(Sender: TObject);
+    procedure ReliabilityEditChange(Sender: TObject);
+    procedure ComfortEditChange(Sender: TObject);
+    procedure ReadyButtonClick(Sender: TObject);
+    procedure EngineComboBoxChange(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    Engine: TEngine;
+    Cost: Integer;
+    FuelConsumption: Real;
+    Reliability: Byte;
+    Comfort: Byte;
+  end;
+
+var
+  Form2: TForm2;
+  ArrayOfEngines: array [TEngine] of String = ('', 'Бензиновый', 'Дизельный', 'Электрический');
+
+implementation
+
+{$R *.dfm}
+
+  procedure TForm2.ComfortEditChange(Sender: TObject);
+    begin
+      try
+        Comfort := StrToInt(ComfortEdit.Text);
+      except
+        if (CostEdit.Text <> '') then
+          MessageDlg('Ввод некорректен',  mtError, [mbOK], 0);
+      end;
+    end;
+
+  procedure TForm2.ConsumptionEditChange(Sender: TObject);
+    begin
+      try
+
+      except
+        if (CostEdit.Text <> '') then
+          MessageDlg('Ввод некорректен',  mtError, [mbOK], 0);
+      end;
+    end;
+
+  procedure TForm2.CostEditChange(Sender: TObject);
+    begin
+      try
+        Cost := StrToInt(CostEdit.Text);
+      except
+        if (CostEdit.Text <> '') then
+
+      end;
+    end;
+
+  procedure TForm2.EngineComboBoxChange(Sender: TObject);
+    Var
+      SelectedValue: String;
+    begin
+      SelectedValue := EngineComboBox.Items[EngineComboBox.ItemIndex];
+      if (SelectedValue = 'Бензиновый') then
+        Begin
+          Engine := Gasoline;
+        End
+      else if (SelectedValue = 'Дизельный') then
+        Begin
+          Engine := Diesel;
+        End
+      else
+        Begin
+          Engine := Electric;
+        End;
+    end;
+
+procedure TForm2.ReadyButtonClick(Sender: TObject);
+    begin
+      try
+        Cost := StrToInt(CostEdit.Text);
+        FuelConsumption := StrToFloat(ConsumptionEdit.Text);
+
+
+      except
+        MessageDlg('Ввод некорректен',  mtError, [mbOK], 0);
+      end;
+      ModalResult := mrOk;
+    end;
+
+procedure TForm2.ReliabilityEditChange(Sender: TObject);
+    begin
+      try
+        Reliability := StrToInt(ReliabilityEdit.Text);
+      except
+        if (CostEdit.Text <> '') then
+          MessageDlg('Ввод некорректен',  mtError, [mbOK], 0);
+      end;
+    end;
+
+  procedure TForm2.FormCreate(Sender: TObject);
+    begin
+      Form2.Caption := 'Ввод параметров записи';
+    end;
+
+end.

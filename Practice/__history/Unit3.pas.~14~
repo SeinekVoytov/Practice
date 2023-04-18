@@ -1,0 +1,93 @@
+﻿unit Unit3;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Lists;
+
+type
+  TSearchForm = class(TForm)
+    CostFromEdit: TEdit;
+    CostToEdit: TEdit;
+    CostLabel: TLabel;
+    CostFromLabel: TLabel;
+    CostToLabel: TLabel;
+    EngineComboBox: TComboBox;
+    EngineLabel: TLabel;
+    FuelFromLabel: TLabel;
+    FuelFromEdit: TEdit;
+    FuelToLabel: TLabel;
+    FuelToEdit: TEdit;
+    FuelLabel: TLabel;
+    ReliabilityLabel: TLabel;
+    ReliabilityFromLabel: TLabel;
+    ReliabilityFromEdit: TEdit;
+    ReliabilityToLabel: TLabel;
+    ReliabilityToEdit: TEdit;
+    ComfortLabel: TLabel;
+    ComfortFtomLabel: TLabel;
+    ComfortFromEdit: TEdit;
+    ComfortToLabel: TLabel;
+    ComfortToEdit: TEdit;
+    ReadyButton: TButton;
+    procedure FormCreate(Sender: TObject);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure ReadyButtonClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    Engine: TEngine;
+    CostFrom, CostTo: Integer;
+    ConsumptionFrom, ConsumptionTo: Real;
+    ComfortFrom, ComfortTo, ReliabilityFrom, ReliabilityTo: Byte;
+  end;
+
+var
+  SearchForm: TSearchForm;
+
+implementation
+
+{$R *.dfm}
+
+  procedure TSearchForm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    begin
+      CanClose := False;
+    end;
+
+  procedure TSearchForm.FormCreate(Sender: TObject);
+    begin
+      SearchForm.Caption := 'Ввод параметров поиска';
+    end;
+
+  procedure TSearchForm.ReadyButtonClick(Sender: TObject);
+    Var
+      SelectedValue: String;
+    begin
+      try
+        SelectedValue := EngineComboBox.Items[EngineComboBox.ItemIndex];
+        if (SelectedValue = 'Бензиновый') then
+          Begin
+            Engine := Gasoline;
+          End
+        else if (SelectedValue = 'Дизельный') then
+          Begin
+            Engine := Diesel;
+          End
+        else
+          Begin
+            Engine := Electric;
+          End;
+        CostFrom := StrToInt(CostFromEdit.Text);
+        CostTo := StrToInt(CostToEdit.Text);
+        ConsumptionFrom := StrToFloat(FuelFromEdit.Text);
+        ConsumptionTo := StrToFloat(FuelToEdit.Text);
+        ComfortFrom := StrToInt(ComfortFromEdit.Text);
+        ComfortTo := StrToInt(ComfortToEdit.Text);
+
+      except
+
+      end;
+    end;
+
+end.
